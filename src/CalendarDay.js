@@ -336,12 +336,12 @@ class CalendarDay extends Component {
     if (!this.props.markedDates || this.props.markedDates.length === 0) {
       return;
     }
+    const markedDatesStyle = this.props.markedDatesStyle || {};
     if (
       marking.text &&
       Array.isArray(marking.text) &&
       marking.text.length > 0
     ) {
-      const markedDatesStyle = this.props.markedDatesStyle || {};
       const formattedDate = this.props.date.format("YYYY-MM-DD");
       let validText = <View style={[styles.dot]} />; // default empty view for no dots case
 
@@ -350,15 +350,12 @@ class CalendarDay extends Component {
         .filter(d => d && d.color)
         .map((dot, index) => {
           const color = dot.color || "#000"; // selectedDotColor deprecated
-
+          const backgroundColor = dot.backgroundColor || "#fff";
           const displayText = dot.displayText ? dot.displayText : "";
           return (
             <Text
               key={dot.key || formattedDate + index}
-              style={[
-                { color: color, backgroundColor: "#fff" },
-                markedDatesStyle
-              ]}
+              style={[{ color: color, backgroundColor }, markedDatesStyle]}
             >
               {displayText}
             </Text>
@@ -367,7 +364,11 @@ class CalendarDay extends Component {
 
       return <View style={styles.dotsContainer}>{validText}</View>;
     }
-    return;
+    return (
+      <View style={styles.dotsContainer}>
+        <Text style={[markedDatesStyle]}> {"  "}</Text>
+      </View>
+    );
   }
 
   renderDots(marking) {
